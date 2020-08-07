@@ -1,0 +1,12 @@
+product, type, company
+iphone,hw-phone,apple
+ios,sw-os,apple
+android,sw-os,google
+apple arcade,sw-service,apple
+ipad,hw-tablet,apple
+macbook,hw-laptop,apple
+z flip,hw-phone,samsung
+galaxy fold,hw-phone,samsung
+apple pencil,hw-accessory,apple
+s pen,hw-accessory,samsung
+mac pro,hw-pc,apple
