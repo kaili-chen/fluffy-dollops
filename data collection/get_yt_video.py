@@ -40,12 +40,6 @@ def read_file(path, skip=None):
             lines = [line.strip() for line in file.readlines()]
         return lines
 
-    def read_csv(path):
-        with open('filepath/filename.csv', "rt", encoding='ascii') as infile:
-            read = csv.reader(infile)
-            for row in read :
-                print (row)
-
     methods = {
         'txt': read_txt(path)
     }
@@ -90,9 +84,10 @@ def download_video(url, max_tries = 20):
             return dl
         except:
             try_count += 1
-            print('failed, count={}'.format({try_count}))
+            print('failed, count={}'.format(try_count))
 
     print('failed: {}'.format(url))
+
     return None
 
 if __name__ == "__main__":
