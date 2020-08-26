@@ -1,2 +1,4 @@
+.DS_Store
 venv/
 data collection/.ipynb_checkpoints/
+data collection/__pycache__
