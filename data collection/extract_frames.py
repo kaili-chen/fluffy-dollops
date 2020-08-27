@@ -25,7 +25,7 @@ def extract_frames(path_in, path_out=None:
         os.mkdir(video_name)
         path_out = video_name
 
-    vidcap = cv2.VideoCapture("./oikawa.mp4")
+    vidcap = cv2.VideoCapture(path_in)
     # print(vidcap.get(cv2.CV_CAP_PROP_FPS))
     count = 0
     success = True
