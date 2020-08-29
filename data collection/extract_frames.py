@@ -6,7 +6,7 @@ from datetime import datetime
 import cv2
 # print(cv2.__version__)
 
-def extract_frames(path_in, path_out=None:
+def extract_frames(path_in, path_out=None):
     '''
     Gets frame from video file (mp4/avi) as image (1 frame per second).
 
@@ -53,11 +53,11 @@ if __name__=="__main__":
     # optional arguments
     ap.add_argument("-d", "--dest", help="path to save frame images [default = current dir]")
     args = vars(ap.parse_args())
-    print(args)
+    # print(args)
     path_in = args["input"]
     if os.path.exists(path_in) and os.path.isfile(path_in):
         file_ext = path_in[path_in.rfind(".")+1:]
-        if file_ext not in ["mp4", "avi"]:
+        if file_ext not in ["mp4", "avi", "webm"]:
             print("error: input ({}) not mp4/avi, exiting...".format(path_in))
             sys.exit()
     else:
