@@ -76,6 +76,7 @@ def download_video(url, max_tries = 20):
         # odd error occurs at times, refer to https://github.com/nficano/pytube/issues/393 -hence the while loop
         try:
             yt = YouTube(url)
+            # dl = yt.streams.filter(only_video=True).order_by('resolution')[-1].download()
             dl = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution')[-1].download()
             print(dl)
 
