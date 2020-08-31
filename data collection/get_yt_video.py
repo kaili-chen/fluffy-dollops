@@ -26,7 +26,7 @@ def is_yt_url(url):
     Returns:
         (boolean) indicating if url provided is a youtube url
     '''
-    if url.find('youtube.com/watch?v=') > -1:
+    if url.find('youtube.com/watch?v=') > -1 or url.find('youtu.be/') > -1:
         return True
     return False
 
