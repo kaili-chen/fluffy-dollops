@@ -58,7 +58,7 @@ if __name__=="__main__":
     if os.path.exists(path_in) and os.path.isfile(path_in):
         file_ext = path_in[path_in.rfind(".")+1:]
         if file_ext not in ["mp4", "avi", "webm"]:
-            print("error: input ({}) not mp4/avi, exiting...".format(path_in))
+            print("error: input ({}) not mp4/avi/webm, exiting...".format(path_in))
             sys.exit()
     else:
         print("error: input ({}) either does not exist or not a file, exiting...")
