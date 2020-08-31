@@ -2,4 +2,5 @@
 venv/
 data_collection/.ipynb_checkpoints/
 data_collection/__pycache__
+data_collection/.DS_Store
 images_videos/.DS_Store
