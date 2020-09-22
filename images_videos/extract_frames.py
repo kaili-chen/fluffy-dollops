@@ -26,7 +26,6 @@ def extract_frames(path_in, path_out=None):
         path_out = video_name
 
     vidcap = cv2.VideoCapture(path_in)
-    # print(vidcap.get(cv2.CV_CAP_PROP_FPS))
     count = 0
     success = True
     while success:
@@ -57,7 +56,7 @@ if __name__=="__main__":
     path_in = args["input"]
     if os.path.exists(path_in) and os.path.isfile(path_in):
         file_ext = path_in[path_in.rfind(".")+1:]
-        if file_ext not in ["mp4", "avi", "webm"]:
+        if file_ext not in ["mp4", "avi", "webm", "mkv"]:
             print("error: input ({}) not mp4/avi/webm, exiting...".format(path_in))
             sys.exit()
     else:
