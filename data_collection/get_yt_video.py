@@ -1,16 +1,8 @@
-'''
-Contains methods to assist in extracting lyrics from genius.com.
-
-Functions:
-    get_album_tracks(string) --> list object
-    get_lyrics(string) --> dictionary object
-
-'''
-
 import argparse
 import os
 import sys
 import csv
+import subprocess
 from pytube import YouTube
 
 # https://pypi.org/project/pytube3/
@@ -85,24 +77,64 @@ def download_video(url, max_tries = 20, video_only = False):
     # TODO: add path_out
     # TODO: deal with seperate audio and video files
 
+    # https://pytube3.readthedocs.io/en/latest/user/quickstart.html#working-with-streams
+
     passed = False
     try_count = 0
     while not passed and try_count < max_tries:
         # odd error occurs at times, refer to https://github.com/nficano/pytube/issues/393 -hence the while loop
         try:
             yt = YouTube(url)
+            output_filename = "output.mkv"
 
             print("downloading...")
             if video_only:
                 dl = yt.streams.filter(only_video=True).order_by('resolution')[-1].download()
             else:
-                dl = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution')[-1].download()
+                # dl = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution')[-1].download()
+                vid_stream = yt.streams.filter(only_video=True).order_by('resolution')[-1]
+                # print(vid_stream)
+                # print()
+                if not vid_stream.includes_video_track:
+                    dl = vid_stream.download()
+                    return dl
+
+                vid = vid_stream.download("temp", filename="temp_vid")
+                # print(vid)
+
+                audio_stream = yt.streams.filter(only_audio=True).order_by('abr')[-1]
+                audio = audio_stream.download("temp", filename="temp_audio")
+                # print(audio_stream.includes_audio_track)
+                # print(audio)
+
+                # join video and audio with ffmpeg
+                cmd = './ffmpeg -y -i temp/temp_audio.webm  -r 30 -i temp/temp_vid.webm  -filter:a aresample=async=1 -c:a flac -c:v copy {}'.format(output_filename)
+                subprocess.call(cmd, shell=True, stderr=subprocess.DEVNULL) #suppress output
+                os.rename(os.path.join(os.getcwd(), output_filename), os.path.join(os.getcwd(), "{}.mkv".format(yt.title)))
+
+                # subprocess.call(cmd, shell=True)
+                    # change webm to mp4
+                    # cmd = 'ffmpeg -i input.mp4 output.webm'
+                # except subprocess.CalledProcessError:
+                #     print("subproc error")
+
+                # clean up temp files and folder
+                os.remove(vid)
+                os.remove(audio)
+                os.rmdir("./temp")
+
+                dl = os.path.join(os.getcwd(), "{}.mkv".format(yt.title))
+                # dl = os.path.join(os.getcwd(), output_filename)
+                # dl = yt.streams.filter(only_video=True).order_by('resolution')[-1].download()
+
             print(dl)
 
             passed = True
             try_count = 0
             return dl
-        except:
+
+        except Exception as e:
+            print(str(e))
             try_count += 1
             print('failed, count={}'.format(try_count))
 
@@ -130,7 +162,7 @@ if __name__ == "__main__":
         for line in lines:
             download_video(line, video_only=args['video'])
     elif is_yt_url(input):
-        print("URL found")
+        print("URL found: {}".format(input))
         download_video(input, video_only=args['video'])
     else:
         print("no file/url found")
