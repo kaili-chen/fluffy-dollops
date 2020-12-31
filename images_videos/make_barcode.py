@@ -23,16 +23,20 @@ def make_barcode(frames_dir, bar_width = 1, save = True):
     Returns
         barcode (numpy.ndarray): generated barcode
     '''
-    frame_files = sorted(os.listdir(os.path.join(frames_dir)))
+
+    # only loops png and jpg files
+    frame_files = sorted([f for f in os.listdir(os.path.join(frames_dir)) if f.endswith('.png') or f.endswith('.jpg')])
+
     # sort frames by number e.g. frame 10 before frame 2
     frame_files.sort(key=lambda f: int(re.sub('\D', '', f)))
 
     # calculate total barcode width
     barcode_width = bar_width*len(frame_files)
 
-    # use min barcode height
+    # use min barcode height - loop takes a while, to skip (if sure that all frames are the same height) comment the loop and min(heights) & uncomment just the barcode_height assignment after min(heights)
     heights = [cv2.imread(os.path.join(frames_dir, f), cv2.IMREAD_UNCHANGED).shape[0] for f in frame_files]
     barcode_height = min(heights)
+    # barcode_height = cv2.imread(os.path.join(frames_dir, frame_files[0]), cv2.IMREAD_UNCHANGED).shape[0]
     # print("min height = {}".format(barcode_height))
 
     barcode = np.zeros((barcode_height, barcode_width, 3), np.uint8)
