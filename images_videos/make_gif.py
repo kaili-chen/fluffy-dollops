@@ -2,6 +2,9 @@ import glob
 from PIL import Image
 import argparse
 from datetime import datetime
+import os
+
+import extract_frames
 
 timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
 
@@ -22,8 +25,9 @@ def make_gif(file_in, file_out):
         file_out = "./output{}.gif".format(timestamp)
 
     img, *imgs = [Image.open(f) for f in sorted(glob.glob(file_in))]
+    
     # duration is in milliseconds
-    img.save(fp=file_out, format="GIF", append_images=imgs, save_all=True, duration=200)
+    img.save(fp=file_out, format="GIF", append_images=imgs, save_all=True, duration=500)
 
     return file_out
 
@@ -37,5 +41,9 @@ if __name__ == "__main__":
     ap.add_argument('-d', '--dest', help='file path to save gif as [default: ./output_<datetime>.gif]')
 
     args = vars(ap.parse_args())
-
-    print(make_gif(args['input'], args['dest']))
+    input_item = args['input']
+    if not os.path.isdir(input_item): 
+        print('input is not dir')
+        # change input dir to extracted frames from video
+        input_item = extract_frames.extract_frames(input_item)
+    print(make_gif(input_item, args['dest']))

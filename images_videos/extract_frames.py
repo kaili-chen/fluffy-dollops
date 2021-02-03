@@ -4,6 +4,8 @@ import argparse
 from datetime import datetime
 import cv2
 
+ACCEPTED_FORMATS = ["mp4", "avi", "webm", "mkv", "mov"]
+
 def extract_frames(path_in, path_out=None):
     '''
     Gets frame from video file (mp4/avi) as image (1 frame per second).
@@ -41,8 +43,6 @@ def extract_frames(path_in, path_out=None):
     return path_out
 
 if __name__=="__main__":
-    ACCEPTED_FORMATS = ["mp4", "avi", "webm", "mkv", "mov"]
-
     ap = argparse.ArgumentParser()
 
     # positional arguments
