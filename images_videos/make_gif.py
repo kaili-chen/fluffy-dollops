@@ -3,6 +3,7 @@ from PIL import Image
 import argparse
 from datetime import datetime
 import os
+import re
 
 import extract_frames
 
@@ -19,15 +20,21 @@ def make_gif(file_in, file_out):
     Returns:
     - file_out (string): file path of gif made
     '''
+    # TODO: also handle jpg & jpeg files
+    # only loads in png files
     file_in = "{}/*.png".format(file_in)
 
     if not file_out:
         file_out = "./output{}.gif".format(timestamp)
 
-    img, *imgs = [Image.open(f) for f in sorted(glob.glob(file_in))]
-    
-    # duration is in milliseconds
-    img.save(fp=file_out, format="GIF", append_images=imgs, save_all=True, duration=500)
+    frames = sorted(glob.glob(file_in))
+    # sort frames by number e.g. frame 10 before frame 2
+    frames.sort(key=lambda f: int(re.sub('\D', '', f)))
+
+    frames = [Image.open(f) for f in frames]
+
+    # duration is in milliseconds (500 milliseconds = 1/2 second)
+    frames[0].save(fp=file_out, format="GIF", append_images=frames[1:], save_all=True, duration=500)
 
     return file_out
 
@@ -46,4 +53,5 @@ if __name__ == "__main__":
         print('input is not dir')
         # change input dir to extracted frames from video
         input_item = extract_frames.extract_frames(input_item)
+        # TODO: delete this frames dir after
     print(make_gif(input_item, args['dest']))
