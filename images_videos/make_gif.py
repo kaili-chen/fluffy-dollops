@@ -9,13 +9,14 @@ import extract_frames
 
 timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
 
-def make_gif(file_in, file_out):
+def make_gif(file_in, file_out, frame_duration=500):
     '''
     Produces a gif with png files in dir (file_in).
 
     Parameters:
     - file_in (string): path to dir with png files to be used as frames for gif [default: ./]
     - file_out (string): file path to save gif as [default: ./output_<datetime>.gif]
+    - frame_duration=500 (int): duration between each frame [default = milliseconds]
 
     Returns:
     - file_out (string): file path of gif made
@@ -32,9 +33,8 @@ def make_gif(file_in, file_out):
     frames.sort(key=lambda f: int(re.sub('\D', '', f)))
 
     frames = [Image.open(f) for f in frames]
-
     # duration is in milliseconds (500 milliseconds = 1/2 second)
-    frames[0].save(fp=file_out, format="GIF", append_images=frames[1:], save_all=True, duration=500)
+    frames[0].save(fp=file_out, format="GIF", append_images=frames[1:], save_all=True, duration=frame_duration)
 
     return file_out
 
@@ -46,6 +46,7 @@ if __name__ == "__main__":
 
     # optional arguments
     ap.add_argument('-d', '--dest', help='file path to save gif as [default: ./output_<datetime>.gif]')
+    ap.add_argument('-t', '--duration', type=int, help='duration between each frame [default = milliseconds]')
 
     args = vars(ap.parse_args())
     input_item = args['input']
@@ -54,4 +55,4 @@ if __name__ == "__main__":
         # change input dir to extracted frames from video
         input_item = extract_frames.extract_frames(input_item)
         # TODO: delete this frames dir after
-    print(make_gif(input_item, args['dest']))
+    print(make_gif(input_item, args['dest'], frame_duration=args['duration']))
