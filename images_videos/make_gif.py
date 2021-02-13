@@ -9,14 +9,14 @@ import extract_frames
 
 timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
 
-def make_gif(file_in, file_out, frame_duration=500):
+def make_gif(file_in, file_out, frame_duration=100):
     '''
     Produces a gif with png files in dir (file_in).
 
     Parameters:
     - file_in (string): path to dir with png files to be used as frames for gif [default: ./]
     - file_out (string): file path to save gif as [default: ./output_<datetime>.gif]
-    - frame_duration=500 (int): duration between each frame [default = milliseconds]
+    - frame_duration=100 (int): duration between each frame [default = milliseconds]
 
     Returns:
     - file_out (string): file path of gif made
@@ -46,7 +46,7 @@ if __name__ == "__main__":
 
     # optional arguments
     ap.add_argument('-d', '--dest', help='file path to save gif as [default: ./output_<datetime>.gif]')
-    ap.add_argument('-t', '--duration', type=int, help='duration between each frame [default = milliseconds]')
+    ap.add_argument('-t', '--duration', type=int, default=100, help='duration between each frame [default = 100 milliseconds]')
 
     args = vars(ap.parse_args())
     input_item = args['input']

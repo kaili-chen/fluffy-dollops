@@ -1,5 +1,5 @@
 '''
-Contains ugeneral tility functions
+Contains general tility functions
 
 Functions
 -------

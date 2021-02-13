@@ -8,7 +8,7 @@ from extract_frames import extract_frames
 
 timestamp = datetime.now().strftime("%Y%m%dT%H%M%S")
 
-def make_barcode(frames_dir, bar_width = 1, save = True):
+def make_barcode(frames_dir, bar_width=1, height=0, width=0, save=True):
     '''
     Makes barcode graphic with dir containing png/jpg files.
 
@@ -49,12 +49,19 @@ def make_barcode(frames_dir, bar_width = 1, save = True):
         bar = cv2.resize(frame, (bar_width, barcode_height), interpolation = cv2.INTER_AREA)
         barcode[:,i:(i+bar_width)] = bar
 
-    if type(save) is str:
-        cv2.imwrite("{}.png".format(save), barcode)
-    elif save:
-        cv2.imwrite("barcode_{}.png".format(timestamp), barcode)
+    # dim = (100, 200)    # width, height
+    # # resize image
+    # barcode = cv2.resize(barcode, dim, interpolation = cv2.INTER_AREA)
 
-    return barcode
+    if type(save) is str:
+        filename = "{}.png".format(save)
+        # cv2.imwrite("{}.png".format(save), barcode)
+    elif save:
+        filename = "barcode_{}.png".format(timestamp)
+        # cv2.imwrite("barcode_{}.png".format(timestamp), barcode)
+
+    cv2.imwrite(filename, barcode)
+    return filename
 
 
 if __name__ == "__main__":
@@ -65,8 +72,9 @@ if __name__ == "__main__":
 
     # optional arguments
     ap.add_argument("-s", "--save", help="file name to save generated barcode as")
-    ap.add_argument("-w", "--width", type=int, help="bar width (currently not used)")
-    ap.add_argument("--show", type=bool)
+    ap.add_argument("-w", "--width", type=int, help="barcode width")
+    ap.add_argument("-b", "--height", type=int, help="barcode height")
+    ap.add_argument("--show", type=bool, help="indicate whether to display resulting barcode")
 
     args = vars(ap.parse_args())
     # print(args)
@@ -74,6 +82,15 @@ if __name__ == "__main__":
     frames_dir = args["input"]
     barcode = make_barcode(frames_dir, bar_width=2)
     # print(type(barcode))
-    cv2.imshow("Generated Barcode", barcode)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+
+    # resizing
+    # img = cv2.imread(barcode, cv2.IMREAD_UNCHANGED)
+    # dim = (100, 200)    # width, height
+    # # # resize image
+    # img = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    # cv2.imwrite(barcode, img)
+
+    if args["show"]:
+        cv2.imshow("Generated Barcode", barcode)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()

@@ -1,0 +1,14 @@
+[
+    {
+        "pattern": "[^A-Za-z0-9]",
+        "description": "remove special characters"
+    },
+    {
+        "pattern": "\D",
+        "description": "not digits"
+    },
+    {
+        "pattern": "\[.*?\]",
+        "description": "match square brackets and contents it encloses"
+    }
+]

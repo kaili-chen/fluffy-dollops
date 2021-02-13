@@ -1,9 +1,8 @@
 import argparse
 import os
-import sys
-import csv
 import subprocess
 from pytube import YouTube
+# import logging
 
 # https://pypi.org/project/pytube3/
 
@@ -82,7 +81,7 @@ def download_video(url, max_tries = 20, video_only = False):
     passed = False
     try_count = 0
     while not passed and try_count < max_tries:
-        # odd error occurs at times, refer to https://github.com/nficano/pytube/issues/393 -hence the while loop
+        # odd error occurs at times, refer to https://github.com/nficano/pytube/issues/393 -> hence the while loop
         try:
             yt = YouTube(url)
             output_filename = "output.mkv"
@@ -93,23 +92,27 @@ def download_video(url, max_tries = 20, video_only = False):
             else:
                 # dl = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution')[-1].download()
                 vid_stream = yt.streams.filter(only_video=True).order_by('resolution')[-1]
-                # print(vid_stream)
+                print(vid_stream)
+                print(vid_stream.mime_type)
                 # print()
                 if not vid_stream.includes_video_track:
                     dl = vid_stream.download()
                     return dl
 
                 vid = vid_stream.download("temp", filename="temp_vid")
-                # print(vid)
+                # print("\tvideo stream generated: {}".format(vid))
 
                 audio_stream = yt.streams.filter(only_audio=True).order_by('abr')[-1]
                 audio = audio_stream.download("temp", filename="temp_audio")
                 # print(audio_stream.includes_audio_track)
-                # print(audio)
+                # print("\taudio stream generated: {}".format(audio))
 
                 # join video and audio with ffmpeg
-                cmd = './ffmpeg -y -i temp/temp_audio.webm  -r 30 -i temp/temp_vid.webm  -filter:a aresample=async=1 -c:a flac -c:v copy {}'.format(output_filename)
-                subprocess.call(cmd, shell=True, stderr=subprocess.DEVNULL) #suppress output
+                # print("\trunning ffmpeg...")
+                # cmd = './ffmpeg -y -i temp/temp_audio.webm  -r 30 -i temp/temp_vid.webm  -filter:a aresample=async=1 -c:a flac -c:v copy {}'.format(output_filename)
+                cmd = 'ffmpeg -i temp/temp_vid.webm -i temp/temp_audio.webm {}'.format(output_filename)
+                # subprocess.call(cmd, shell=True, stderr=subprocess.DEVNULL) #suppress output
+                subprocess.call(cmd, shell=True) #suppress output
                 os.rename(os.path.join(os.getcwd(), output_filename), os.path.join(os.getcwd(), "{}.mkv".format(yt.title)))
 
                 # subprocess.call(cmd, shell=True)
@@ -146,13 +149,19 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
 
     # positional arguments
-    ap.add_argument('input', help='input file or youtube url')
+    ap.add_argument('input', help='input txt file or youtube url')
 
     # optional arguments
     ap.add_argument('-v', '--video', type=bool, help='indicate whether to download video only')
 
     args = vars(ap.parse_args())
+
+    ### LOGGING
+    # logging.basicConfig(filename='get_yt_video.log', level=logging.DEBUG)
+    # logging.debug('cli inputs: {}'.format(args))
+
     # print(args)
+
     # checks if input is a file path
     input = args['input']
     is_file = os.path.isfile(input)
