@@ -41,6 +41,8 @@ def make_gif(file_in, file_out, frame_duration=100):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
 
+    # TODO check if input is even valid
+
     # positional arguments
     ap.add_argument('input', help='path to dir with png files to be used as frames for gif [default: ./]')
 

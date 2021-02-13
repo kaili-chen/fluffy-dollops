@@ -2,6 +2,8 @@
 Contains ugeneral tility functions
 
 Functions
+- get_soup(url): Returns a BeautifulSoup object of the HTML contents of a provided url.
+- remove_children(element): Removes children elements from a bs4.element.Tag (changes the input element).
 -------
 '''
 
@@ -26,13 +28,13 @@ def get_soup(url):
     if webpage.status_code != 200:
         # print('webpage status code = {}, exiting'.format(webpage.status_code))
         # sys.exit()
-        raise Bs4Error("{}: status code = {}, exiting get_soup function".format(url, webpage.status_code))
+        raise Exception("{}: status code = {}, exiting get_soup function".format(url, webpage.status_code))
 
     soup = BeautifulSoup(webpage.text, "html.parser")
     if soup is None or soup == "":
         # print("no soup, exiting")
         # sys.exit()
-        raise Bs4Error("{}: no soup, exiting get_soup function".format(url, webpage.status_code))
+        raise Exception("{}: no soup, exiting get_soup function".format(url, webpage.status_code))
     return soup
 
 def remove_children(element):
