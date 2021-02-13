@@ -1,8 +1,8 @@
 # fluffy-dollops
-A place for some quick scripts made with python.
+A collection of scripts.
 
 # Usage Notes
-* Almost all the scripts in this repo can be used with the command line (use `python <script path>.py -h` for quick usage hints)
+* Almost all python scripts in this repo can be used with the command line (use `python <script path>.py -h` for quick usage hints)
 
 # Contents
 :file_folder: [data_collection](data_collection/)
