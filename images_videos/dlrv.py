@@ -9,6 +9,18 @@ import os
 import argparse
 
 def merge_video_audio(video_path, audio_path, output_filename):
+    '''uses ffmpeg (needs to be installed on device) to combine video and audio file
+    Parameters:
+        video_path::str
+            video mp4 file path
+        audio_path::str
+            audio mp4 file path
+        output_filename::bool
+            video output path
+
+    Returns:
+        None
+    '''
     # ffmpeg -i <video> -i <audio> -c:v copy -c:a aac output.mp4
     subprocess.call('ffmpeg -i {} -i {} -c:v copy -c:a aac {}'.format(video_path, audio_path, output_filename), shell=True)
 
@@ -17,20 +29,20 @@ def merge_video_audio(video_path, audio_path, output_filename):
     if os.path.isfile(audio_path): os.remove(audio_path)
 
 def main(url, output_path='output.mp4', use_file=False):
-    '''
-    Parameters
-    --------------
-    - url   (str):  reddit post url / json file path
-    - output_path   (str)   [default = 'output.mp4']: output mp4 path
-    - use_file  (bool)  [default = False]:  if true, reads url as json file path instead of reddit url
+    '''gets reddit url / read json file to download video
+    Parameters:
+        url::str
+            reddit post url / json file path
+        output_path::str
+            output mp4 path, default = 'output.mp4'
+        use_file::bool
+            if true, reads url as json file path instead of reddit url, default = False
 
-    Returns
-    --------------
-    None
+    Returns:
+        None
     '''
     if use_file:
         print('reading file')
-        # res = json.load(open('reddit_download/reddit_req.json', 'r'))
         res = json.load(open(url, 'r'))
     else:
         print('reading url')
@@ -41,9 +53,7 @@ def main(url, output_path='output.mp4', use_file=False):
     post_item = res[0]
     post_data = post_item['data']
     video_info = post_data['children'][0]['data']['secure_media']
-    # pprint.pprint(video_info)
     video_url = video_info['reddit_video']['fallback_url']
-    # print(video_url)
     audio_url = video_url[:video_url.find('DASH_')+len('DASH_')]+'audio.mp4?source=fallback'
 
     print('downloading video...')
@@ -65,6 +75,6 @@ if __name__ == '__main__':
 
     # read arguments
     args = parser.parse_args()
-    print(args)
+
     # run main method
-    # main(args.url, output_path=args.output)
+    main(args.url, output_path=args.output)
