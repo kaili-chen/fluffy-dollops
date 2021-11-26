@@ -18,9 +18,6 @@ A collection of scripts.
 * :information_source: generally discrete code that have not been cleaned for general use
 
 :file_folder: [utility](utility/)
-* :file_folder: [boilerplates](utility/boilerplates/)
-    * :page_facing_up: [basic_bs_scrapper.py](utility/boilerplates/basic_bs_scrapper.py): beautifulsoup template
-    * :page_facing_up: [basic_cmd_line.py](utility/boilerplates/basic_cmd_line.py): cli template
 * :card_index: [regex-lib](utility/regex-lib)
     * :information_source: a quick copy for most commonly re-googled regex patterns
     * To use: open `index.html`
